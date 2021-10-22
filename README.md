@@ -5,3 +5,7 @@ The main file is [EFG_point_charge](https://github.com/JonathanFrassineti/Point-
 
 For physical details about what is the EFG, and what is the point charge approximation, please visit:
 https://en.wikipedia.org/wiki/Electric_field_gradient, https://en.wikipedia.org/wiki/Electric_potential
+
+
+![EFG1](./EFG.gif)
+![EFG2](./EFG2.gif)
