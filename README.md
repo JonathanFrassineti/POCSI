@@ -2,5 +2,4 @@ This is the code I wrote in Python3 that allows the user to calculate the electr
 in the desired postition.
 
 For physical details about what is the EFG, and what is the point charge approximation, please visit:
-EFG -> https://en.wikipedia.org/wiki/Electric_field_gradient
-Point Charge electric potentials -> https://en.wikipedia.org/wiki/Electric_potential
+https://en.wikipedia.org/wiki/Electric_field_gradient, https://en.wikipedia.org/wiki/Electric_potential
