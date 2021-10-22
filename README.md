@@ -8,4 +8,4 @@ https://en.wikipedia.org/wiki/Electric_field_gradient, https://en.wikipedia.org/
 
 
 ![EFG1](./EFG.gif)
-![EFG2](./EFG2.gif)
+![EFG2](./EFG2.jpg)
