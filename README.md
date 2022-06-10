@@ -1,3 +1,7 @@
+# POCSI (POint Charge SImulation of electric field gradient)
+
+## Author: Jonathan Frassineti (University of Bologna, Italy)
+
 This is the code I wrote in Python3 that allows the user to calculate the electric field gradient (or EFG) from a point charge distribution in a crystal,
 in the desired position.
 
