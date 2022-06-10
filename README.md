@@ -8,6 +8,6 @@ The possibility to add a pertubing particle inside the crystal (such as the muon
 For physical details about what is the EFG, and what is the point charge approximation, please visit:
 https://en.wikipedia.org/wiki/Electric_field_gradient, https://en.wikipedia.org/wiki/Electric_potential
 
-For a much deeper explanation, please have a look at [README.pdf] (https://github.com/JonathanFrassineti/Point-Charge-Electric-Field-Gradient/blob/master/README.pdf).
+For a much deeper explanation, please have a look at [README](https://github.com/JonathanFrassineti/Point-Charge-Electric-Field-Gradient/blob/main/README.pdf).
 
 ![EFG1](./EFG.gif)
