@@ -8,9 +8,9 @@ In this file, the funcions that calculate and diagonalize the EFG are defined.
 """
 
 import numpy as np
-from Crystalline_structure import base, base_shifted, lattice_par1, \
-                                  lattice_par2, lattice_par3, xxx, shifts, \
-                                  quadrupole_moment, jump_atoms
+from Crystalline_structure import base, lattice_par1, \
+                                  lattice_par2, lattice_par3, \
+                                  quadrupole_moment
 
 atomic_EFG = - 9.71736166e21 # V/(m^2), atomic unit of EFG
 angtom = 1.0e-10 # Angstrom unit of measure
@@ -26,136 +26,43 @@ from the origin that build the crystalline structure, starting from the basis; g
 more accurate the calculation, but also much slower.
 """
 
-def point_charge_EFG(pos, s=15, impurity = False):
+def point_charge_EFG(pos, s=15):
 
     a1 = np.array([lattice_par1, 0, 0])
     a2 = np.array([0, lattice_par2, 0])
     a3 = np.array([0, 0, lattice_par3])
 
-
-    if impurity == True: 
-        for i in range(len(pos)):
-            pos[i] *= shifts[i]
-            
-        v = np.zeros((3, 3), dtype='float64')
-
-        for u1 in range(-s, s + 1):
-    
-            for u2 in range(-s, s + 1):
-    
-                for u3 in range(-s, s + 1):
-    
-                    for k in range(len(base)):
-                        
-                        if ((u1 ==  0) and (u2 == -1) and (u3 ==  0) and (k == 0)):
-                            continue
-                        if ((u1 == -1) and (u2 == -1) and (u3 ==  0) and (k == 1)):
-                            continue
-                        if ((u1 ==  0) and (u2 ==  0) and (u3 == -1) and (k == 4)):
-                            continue
-                        if ((u1 ==  0) and (u2 ==  0) and (u3 ==  0) and (k == 5)):
-                            continue
-                            
-                        D = np.zeros(3, dtype='float')
-                        D[0] = u1 + base[k, 0]
-                        D[1] = u2 + base[k, 1]
-                        D[2] = u3 + base[k, 2]
-    
-                        if ((D[0] == pos[0]) and (D[1] == pos[1]) and (D[2] == pos[2])): continue
-    
-                        r_k = np.zeros(3, dtype='float')
-    
-                        r_k[0] = (D[0] - pos[0]) * a1[0] + (D[1] - pos[1]) * a2[0] + (D[2] - pos[2]) * a3[0]
-                        r_k[1] = (D[0] - pos[0]) * a1[1] + (D[1] - pos[1]) * a2[1] + (D[2] - pos[2]) * a3[1]
-                        r_k[2] = (D[0] - pos[0]) * a1[2] + (D[1] - pos[1]) * a2[2] + (D[2] - pos[2]) * a3[2]
-    
-                        rr = r_k[0] * r_k[0] + r_k[1] * r_k[1] + r_k[2] * r_k[2]
-    
-                        v[0, 0] += base[k, 3] * base[k, 4] * (3 * r_k[0] * r_k[0] - rr) / pow(rr, 2.5)
-                        v[0, 1] += base[k, 3] * base[k, 4] * (3 * r_k[0] * r_k[1]) / pow(rr, 2.5)
-                        v[0, 2] += base[k, 3] * base[k, 4] * (3 * r_k[0] * r_k[2]) / pow(rr, 2.5)
-                        v[1, 1] += base[k, 3] * base[k, 4] * (3 * r_k[1] * r_k[1] - rr) / pow(rr, 2.5)
-                        v[1, 2] += base[k, 3] * base[k, 4] * (3 * r_k[1] * r_k[2]) / pow(rr, 2.5)
-                        v[2, 2] += base[k, 3] * base[k, 4] * (3 * r_k[2] * r_k[2] - rr) / pow(rr, 2.5)
+    v = np.zeros((3, 3), dtype='float64')
         
-            
-        for k in range(len(base_shifted)):
-                
-            D = np.zeros(3, dtype = 'float')
-            D[0] = base_shifted[k,0];
-            D[1] = base_shifted[k,1];
-            D[2] = base_shifted[k,2];
-                                        
-            if ((D[0] == pos[0]) and (D[1] == pos[1]) and (D[2] == pos[2])): continue
-            
-            r_k = np.zeros(3, dtype = 'float')
-                                                               
-            r_k[0] = ( D[0] - pos[0] )*a1[0] + (D[1] - pos[1])*a2[0] + (D[2] - pos[2])*a3[0];
-            r_k[1] = ( D[0] - pos[0] )*a1[1] + (D[1] - pos[1])*a2[1] + (D[2] - pos[2])*a3[1];
-            r_k[2] = ( D[0] - pos[0] )*a1[2] + (D[1] - pos[1])*a2[2] + (D[2] - pos[2])*a3[2];
-                            
-            rr = r_k[0]*r_k[0]+r_k[1]*r_k[1]+r_k[2]*r_k[2]
-                                               
-            v[0,0] += base_shifted[k,3] * base_shifted[k,4] *(3*r_k[0]*r_k[0] - rr) / pow(rr,2.5);
-            v[0,1] += base_shifted[k,3] * base_shifted[k,4] *(3*r_k[0]*r_k[1]) / pow(rr,2.5);
-            v[0,2] += base_shifted[k,3] * base_shifted[k,4] *(3*r_k[0]*r_k[2]) / pow(rr,2.5);
-            v[1,1] += base_shifted[k,3] * base_shifted[k,4] *(3*r_k[1]*r_k[1] - rr) / pow(rr,2.5);
-            v[1,2] += base_shifted[k,3] * base_shifted[k,4] *(3*r_k[1]*r_k[2]) / pow(rr,2.5);
-            v[2,2] += base_shifted[k,3] * base_shifted[k,4] *(3*r_k[2]*r_k[2] - rr) / pow(rr,2.5);
-                 
-        D = np.zeros(3, dtype = 'float')
-        D[0] = xxx[0];
-        D[1] = xxx[1];
-        D[2] = xxx[2];
-    
-        r_k = np.zeros(3, dtype = 'float')
-    
-        r_k[0] = ( D[0] - pos[0] )*a1[0] + (D[1] - pos[1])*a2[0] + (D[2] - pos[2])*a3[0];
-        r_k[1] = ( D[0] - pos[0] )*a1[1] + (D[1] - pos[1])*a2[1] + (D[2] - pos[2])*a3[1];
-        r_k[2] = ( D[0] - pos[0] )*a1[2] + (D[1] - pos[1])*a2[2] + (D[2] - pos[2])*a3[2];
-    
-        rr = r_k[0]*r_k[0]+r_k[1]*r_k[1]+r_k[2]*r_k[2]
-    
-        v[0,0] += xxx[3] * xxx[4] *(3*r_k[0]*r_k[0] - rr) / pow(rr,2.5);
-        v[0,1] += xxx[3] * xxx[4] *(3*r_k[0]*r_k[1]) / pow(rr,2.5);
-        v[0,2] += xxx[3] * xxx[4] *(3*r_k[0]*r_k[2]) / pow(rr,2.5);
-        v[1,1] += xxx[3] * xxx[4] *(3*r_k[1]*r_k[1] - rr) / pow(rr,2.5);
-        v[1,2] += xxx[3] * xxx[4] *(3*r_k[1]*r_k[2]) / pow(rr,2.5);
-        v[2,2] += xxx[3] * xxx[4] *(3*r_k[2]*r_k[2] - rr) / pow(rr,2.5);
-                                 
-    
-    else:
-        v = np.zeros((3, 3), dtype='float64')
-        
-        for u1 in range(-s, s + 1):
+    for u1 in range(-s, s + 1):
 
-            for u2 in range(-s, s + 1):
+        for u2 in range(-s, s + 1):
 
-                for u3 in range(-s, s + 1):
+            for u3 in range(-s, s + 1):
 
-                    for k in range(len(base)):
+                for k in range(len(base)):
                                                     
-                        D = np.zeros(3, dtype='float')
-                        D[0] = u1 + base[k, 0]
-                        D[1] = u2 + base[k, 1]
-                        D[2] = u3 + base[k, 2]
+                    D = np.zeros(3, dtype='float')
+                    D[0] = u1 + base[k, 0]
+                    D[1] = u2 + base[k, 1]
+                    D[2] = u3 + base[k, 2]
 
-                        if ((D[0] == pos[0]) and (D[1] == pos[1]) and (D[2] == pos[2])): continue
+                    if ((D[0] == pos[0]) and (D[1] == pos[1]) and (D[2] == pos[2])): continue
 
-                        r_k = np.zeros(3, dtype='float')
+                    r_k = np.zeros(3, dtype='float')
 
-                        r_k[0] = (D[0] - pos[0]) * a1[0] + (D[1] - pos[1]) * a2[0] + (D[2] - pos[2]) * a3[0]
-                        r_k[1] = (D[0] - pos[0]) * a1[1] + (D[1] - pos[1]) * a2[1] + (D[2] - pos[2]) * a3[1]
-                        r_k[2] = (D[0] - pos[0]) * a1[2] + (D[1] - pos[1]) * a2[2] + (D[2] - pos[2]) * a3[2]
+                    r_k[0] = (D[0] - pos[0]) * a1[0] + (D[1] - pos[1]) * a2[0] + (D[2] - pos[2]) * a3[0]
+                    r_k[1] = (D[0] - pos[0]) * a1[1] + (D[1] - pos[1]) * a2[1] + (D[2] - pos[2]) * a3[1]
+                    r_k[2] = (D[0] - pos[0]) * a1[2] + (D[1] - pos[1]) * a2[2] + (D[2] - pos[2]) * a3[2]
 
-                        rr = r_k[0] * r_k[0] + r_k[1] * r_k[1] + r_k[2] * r_k[2]
+                    rr = r_k[0] * r_k[0] + r_k[1] * r_k[1] + r_k[2] * r_k[2]
 
-                        v[0, 0] += base[k, 3] * base[k, 4] * (3 * r_k[0] * r_k[0] - rr) / pow(rr, 2.5)
-                        v[0, 1] += base[k, 3] * base[k, 4] * (3 * r_k[0] * r_k[1]) / pow(rr, 2.5)
-                        v[0, 2] += base[k, 3] * base[k, 4] * (3 * r_k[0] * r_k[2]) / pow(rr, 2.5)
-                        v[1, 1] += base[k, 3] * base[k, 4] * (3 * r_k[1] * r_k[1] - rr) / pow(rr, 2.5)
-                        v[1, 2] += base[k, 3] * base[k, 4] * (3 * r_k[1] * r_k[2]) / pow(rr, 2.5)
-                        v[2, 2] += base[k, 3] * base[k, 4] * (3 * r_k[2] * r_k[2] - rr) / pow(rr, 2.5)
+                    v[0, 0] += base[k, 3] * base[k, 4] * (3 * r_k[0] * r_k[0] - rr) / pow(rr, 2.5)
+                    v[0, 1] += base[k, 3] * base[k, 4] * (3 * r_k[0] * r_k[1]) / pow(rr, 2.5)
+                    v[0, 2] += base[k, 3] * base[k, 4] * (3 * r_k[0] * r_k[2]) / pow(rr, 2.5)
+                    v[1, 1] += base[k, 3] * base[k, 4] * (3 * r_k[1] * r_k[1] - rr) / pow(rr, 2.5)
+                    v[1, 2] += base[k, 3] * base[k, 4] * (3 * r_k[1] * r_k[2]) / pow(rr, 2.5)
+                    v[2, 2] += base[k, 3] * base[k, 4] * (3 * r_k[2] * r_k[2] - rr) / pow(rr, 2.5)
            
     v *= (elementary_charge / (4 * np.pi * epsilon0)) * (1 / ((angtom) ** 3))
 

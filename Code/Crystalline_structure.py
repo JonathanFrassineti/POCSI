@@ -31,28 +31,3 @@ lattice_par2 = 4.722 # Lattice parameter 'b' of V3Si, in Angstrom
 lattice_par3 = 4.722 # Lattice parameter 'c' of V3Si, in Angstrom
 
 quadrupole_moment = -0.052e-28 # Quadrupolar moment of the atom (in this case, 51V), in m^2
-
-"""
-Now, the possibility to add an impurity, or vacancy, or an additional particle
-(such as a positive muon) inside the crystal, to obtain the EFG with this perturbation.
-First, define the position of the impurity, the atomic base of N nearest neighbours 
-(for this version, only 4 considered) which are displaced due to the presence of the impurity, the displacement itself
-and the list of N nearest neighbours involved from the original atomic base
-(used for EFG calculations).
-"""
-xxx = np.array([0,0,0,1,1]) # Same as for V or Si atom, in this case a H atom at (0,0,0) position
-
-shift_a = 1.05 # The displacement of N nearest neighbours 
-               # due to the presence of 'xxx' impurity along 'a'
-shift_b = 1.05 # Same, along 'b'
-shift_c = 1.05 # Same, along 'c'
-
-shifts = np.array([shift_a,shift_b,shift_c])
-
-base_shifted = np.array([[ 0.25*shift_a, -0.25*shift_b,  0.00*shift_c, 1, 1], # V, along a, shifted in a and b
-                         [-0.25*shift_a, -0.25*shift_b,	 0.00*shift_c, 1, 1], # V, along a, shifted in a and b
-                         [ 0.00*shift_a,  0.25*shift_b,  0.25*shift_c, 1, 1], # V, along c, shifted in b and c
-                         [ 0.00*shift_a,  0.25*shift_b, -0.25*shift_c, 1, 1]]) # V, along c, shifted in b and c
-
-jump_atoms = np.array([0,1,4,5]) # List of atoms considered as N nearest neighbours,
-                                 # from the original atomic base
